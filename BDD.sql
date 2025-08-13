@@ -1,10 +1,46 @@
 DROP DATABASE IF EXISTS BookCard;
 CREATE DATABASE BookCard;
 USE BookCard;
-CREATE TABLE gundam_cards (
+
+--Table Game
+
+CREATE TABLE Game (
     ID INT AUTO_INCREMENT PRIMARY KEY,
+    Name_Game VARCHAR(50) NOT NULL,
+    Img_Game VARCHAR(255) NOT NULL
+    --Look for description ??
+);
+
+
+--Table Extension
+
+CREATE TABLE Extension_Card (
+    ID INT AUTO_INCREMENT PRIMARY KEY,
+    Game_ID INT NOT NULL,
+    Name VARCHAR(50) NOT NULL,
+    Date_Release DATE,
+    FOREIGN KEY (Game_ID) REFERENCES Game(ID) ON DELETE CASCADE
+
+);
+
+--Table Extension_Img
+
+CREATE TABLE Extension_Img (
+    ID INT AUTO_INCREMENT PRIMARY KEY,
+    Extension_ID INT NOT NULL,
+    Image_URL VARCHAR(255) NOT NULL,
+    Image_Description VARCHAR(100),
+    FOREIGN KEY (Extension_ID) REFERENCES Extension_Card(ID) ON DELETE CASCADE
+
+);
+
+--Table Card Gundam
+
+CREATE TABLE Gundam_Cards (
+    ID INT AUTO_INCREMENT PRIMARY KEY,
+    Extension_ID INT NOT NULL,
     Name_Card VARCHAR(50) NOT NULL,
-    Sous_Titre VARCHAR(20),
+    Sous_Title VARCHAR(20),
     Rarete CHAR(4) CHECK (
         Rarete IN (
             'LR++',
@@ -31,7 +67,7 @@ CREATE TABLE gundam_cards (
             'ExBase'
         )
     ),
-    Color TEXT CHECK (
+    Color VARCHAR(10) CHECK (
         Color IN (
             'Red',
             'Bleu',
@@ -60,13 +96,17 @@ CREATE TABLE gundam_cards (
     Archetype_02 VARCHAR(50),
     Space BOOLEAN NOT NULL,
     Earth BOOLEAN NOT NULL,
-    Link VARCHAR(20)
+    Link VARCHAR(20),
+    Author VARCHAR(20),
+    FOREIGN KEY (Extension_ID) REFERENCES Extension_Card(ID) ON DELETE CASCADE
 );
 
-CREATE TABLE gundam_cards_img (
-    ID INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
+--Table Picture Gundam
+
+CREATE TABLE Gundam_Cards_Img (
+    ID INT AUTO_INCREMENT PRIMARY KEY,
     Card_ID INT NOT NULL,
     Image_URL VARCHAR(255) NOT NULL,
     Image_Description VARCHAR(100),
-    FOREIGN KEY (Card_ID) REFERENCES gundam_cards (ID) ON DELETE CASCADE
+    FOREIGN KEY (Card_ID) REFERENCES Gundam_Cards(ID) ON DELETE CASCADE
 );
